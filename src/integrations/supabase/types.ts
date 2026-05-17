@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      payment_settings: {
+        Row: {
+          id: string
+          payee_name: string
+          qr_mode: string
+          updated_at: string
+          upi_id: string
+        }
+        Insert: {
+          id?: string
+          payee_name?: string
+          qr_mode?: string
+          updated_at?: string
+          upi_id?: string
+        }
+        Update: {
+          id?: string
+          payee_name?: string
+          qr_mode?: string
+          updated_at?: string
+          upi_id?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
@@ -25,6 +49,8 @@ export type Database = {
           payment_url: string | null
           raw_response: Json | null
           status: string
+          submitted_at: string | null
+          submitted_utr: string | null
           updated_at: string
           utr: string | null
         }
@@ -38,6 +64,8 @@ export type Database = {
           payment_url?: string | null
           raw_response?: Json | null
           status?: string
+          submitted_at?: string | null
+          submitted_utr?: string | null
           updated_at?: string
           utr?: string | null
         }
@@ -51,8 +79,31 @@ export type Database = {
           payment_url?: string | null
           raw_response?: Json | null
           status?: string
+          submitted_at?: string | null
+          submitted_utr?: string | null
           updated_at?: string
           utr?: string | null
+        }
+        Relationships: []
+      }
+      qr_codes: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          image_url: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          image_url: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          image_url?: string
         }
         Relationships: []
       }
