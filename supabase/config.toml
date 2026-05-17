@@ -1,13 +1,4 @@
 project_id = "kewlzikizlivwickxksd"
 
-[functions.create-payment]
-verify_jwt = false
-
-[functions.check-payment]
-verify_jwt = false
-
-[functions.payin-webhook]
-verify_jwt = false
-
 [functions.admin-payments]
 verify_jwt = false
