@@ -18,6 +18,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 const PASSWORD_KEY = "admin_pwd";
 
 type Payment = {
@@ -52,6 +53,8 @@ const Admin = () => {
         headers: {
           "Content-Type": "application/json",
           "x-admin-password": password,
+          apikey: SUPABASE_ANON,
+          Authorization: `Bearer ${SUPABASE_ANON}`,
           ...(init.headers || {}),
         },
       });
