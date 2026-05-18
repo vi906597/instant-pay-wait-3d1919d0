@@ -215,11 +215,11 @@ const PaymentsTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<a
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order</TableHead>
                 <TableHead>Email / Mobile</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>User UTR</TableHead>
+                <TableHead>UPI ID</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
@@ -229,7 +229,6 @@ const PaymentsTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<a
                 <TableRow><TableCell colSpan={7} className="text-center py-12 text-muted-foreground">No payments</TableCell></TableRow>
               ) : payments.map((p) => (
                 <TableRow key={p.id}>
-                  <TableCell className="font-mono text-xs">{p.order_id}</TableCell>
                   <TableCell className="text-sm">
                     <div>{p.email}</div>
                     <div className="font-mono text-xs text-muted-foreground">{p.customer_mobile}</div>
@@ -238,7 +237,8 @@ const PaymentsTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<a
                     ₹{Number(p.amount).toLocaleString("en-IN")}
                   </TableCell>
                   <TableCell><StatusBadge status={p.status} /></TableCell>
-                  <TableCell className="font-mono text-xs">{p.submitted_utr || "—"}</TableCell>
+                  <TableCell className="font-mono text-xs font-semibold text-primary">{p.submitted_utr || "—"}</TableCell>
+                  <TableCell className="font-mono text-xs">{p.assigned_upi || "—"}</TableCell>
                   <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                     {new Date(p.created_at).toLocaleString("en-IN")}
                   </TableCell>
