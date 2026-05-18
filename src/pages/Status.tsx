@@ -20,6 +20,7 @@ type Payment = {
   status: string;
   utr: string | null;
   submitted_utr: string | null;
+  assigned_upi: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -60,7 +61,8 @@ const StatusPage = () => {
             .from("qr_codes").select("image_url").eq("amount", amt).maybeSingle();
           setQrImage(qr?.image_url || null);
         } else {
-          const upi = `upi://pay?pa=${encodeURIComponent((setRows as Settings).upi_id)}&pn=${encodeURIComponent((setRows as Settings).payee_name)}&am=${amt}&cu=INR&tn=${encodeURIComponent((pay as Payment).order_id)}`;
+          const upiId = (pay as Payment).assigned_upi || (setRows as Settings).upi_id;
+          const upi = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent((setRows as Settings).payee_name)}&am=${amt}&cu=INR&tn=${encodeURIComponent((pay as Payment).order_id)}`;
           const dataUrl = await QRCode.toDataURL(upi, { width: 320, margin: 1 });
           setQrImage(dataUrl);
         }
@@ -160,15 +162,18 @@ const StatusPage = () => {
               <div className="inline-block p-4 bg-white rounded-2xl shadow-elevated">
                 <img src={qrImage} alt="UPI QR" className="w-64 h-64 object-contain" />
               </div>
-              {settings?.qr_mode === "auto" && (
-                <div className="mt-3 text-sm">
-                  <p className="text-muted-foreground">Pay to UPI ID</p>
-                  <button onClick={() => copy(settings.upi_id)}
-                    className="inline-flex items-center gap-2 font-mono font-semibold text-primary hover:underline">
-                    {settings.upi_id} <Copy className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
+              {settings?.qr_mode === "auto" && (() => {
+                const upiId = payment.assigned_upi || settings.upi_id;
+                return (
+                  <div className="mt-3 text-sm">
+                    <p className="text-muted-foreground">Pay to UPI ID</p>
+                    <button onClick={() => copy(upiId)}
+                      className="inline-flex items-center gap-2 font-mono font-semibold text-primary hover:underline">
+                      {upiId} <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                );
+              })()}
               <p className="text-xs text-muted-foreground mt-3">
                 Open any UPI app (GPay / PhonePe / Paytm) → Scan this QR → Pay exactly ₹{Number(payment.amount).toLocaleString("en-IN")}
               </p>

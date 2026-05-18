@@ -21,6 +21,7 @@ export type Database = {
           qr_mode: string
           updated_at: string
           upi_id: string
+          upi_ids: string[]
         }
         Insert: {
           id?: string
@@ -28,6 +29,7 @@ export type Database = {
           qr_mode?: string
           updated_at?: string
           upi_id?: string
+          upi_ids?: string[]
         }
         Update: {
           id?: string
@@ -35,12 +37,14 @@ export type Database = {
           qr_mode?: string
           updated_at?: string
           upi_id?: string
+          upi_ids?: string[]
         }
         Relationships: []
       }
       payments: {
         Row: {
           amount: number
+          assigned_upi: string | null
           created_at: string
           customer_mobile: string
           email: string
@@ -56,6 +60,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          assigned_upi?: string | null
           created_at?: string
           customer_mobile: string
           email: string
@@ -71,6 +76,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          assigned_upi?: string | null
           created_at?: string
           customer_mobile?: string
           email?: string
