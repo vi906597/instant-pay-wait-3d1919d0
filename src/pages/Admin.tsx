@@ -378,13 +378,18 @@ const QrTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<any> })
 
 // ============= SETTINGS TAB =============
 const SettingsTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<any> }) => {
-  const [s, setS] = useState<Settings>({ upi_id: "", payee_name: "", qr_mode: "auto" });
+  const [s, setS] = useState<Settings>({ upi_id: "", payee_name: "", qr_mode: "auto", upi_ids: [] });
+  const [upiList, setUpiList] = useState("");
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     try {
       const data = await call(`?action=config`);
-      if (data.settings) setS(data.settings);
+      if (data.settings) {
+        const settings = { ...data.settings, upi_ids: data.settings.upi_ids || [] };
+        setS(settings);
+        setUpiList((settings.upi_ids || []).join("\n"));
+      }
     } catch {}
   }, [call]);
 
@@ -393,8 +398,11 @@ const SettingsTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<a
   const save = async () => {
     setSaving(true);
     try {
-      await call(`?action=update-settings`, { method: "POST", body: JSON.stringify(s) });
+      const upi_ids = upiList.split(/\n|,/).map((x) => x.trim()).filter(Boolean);
+      const payload = { ...s, upi_ids, upi_id: upi_ids[0] || s.upi_id };
+      await call(`?action=update-settings`, { method: "POST", body: JSON.stringify(payload) });
       toast({ title: "Settings saved" });
+      load();
     } catch (e: any) {
       toast({ title: "Save failed", description: String(e), variant: "destructive" });
     } finally { setSaving(false); }
@@ -414,15 +422,23 @@ const SettingsTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<a
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground">
-            <strong>Auto:</strong> generates a UPI QR with the entered amount paid to your UPI ID.{" "}
+            <strong>Auto:</strong> generates a UPI QR with the entered amount paid to one of your UPI IDs (randomly rotated per order).{" "}
             <strong>Uploaded:</strong> shows the QR you uploaded in the QR Codes tab for that exact amount.
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label>UPI ID (for auto-generated QR)</Label>
-          <Input value={s.upi_id} onChange={(e) => setS({ ...s, upi_id: e.target.value })}
-            placeholder="9065978244@upi" className="h-11 font-mono" />
+          <Label>UPI IDs (one per line — a random one is used for each order)</Label>
+          <textarea
+            value={upiList}
+            onChange={(e) => setUpiList(e.target.value)}
+            placeholder={"9065978244@upi\nexample@ybl\nshop@paytm"}
+            rows={6}
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          <p className="text-xs text-muted-foreground">
+            Currently active: <span className="font-mono">{upiList.split(/\n|,/).map((x) => x.trim()).filter(Boolean).length}</span> UPI ID(s)
+          </p>
         </div>
 
         <div className="space-y-2">
