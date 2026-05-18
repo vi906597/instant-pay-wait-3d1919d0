@@ -31,6 +31,7 @@ type Payment = {
   utr: string | null;
   submitted_utr: string | null;
   submitted_at: string | null;
+  assigned_upi: string | null;
   created_at: string;
 };
 
@@ -39,7 +40,7 @@ type Stats = {
   sumSuccess: number; sumAll: number;
 };
 
-type Settings = { upi_id: string; payee_name: string; qr_mode: string };
+type Settings = { upi_id: string; payee_name: string; qr_mode: string; upi_ids: string[] };
 type QrCodeRow = { id: string; amount: number; image_url: string };
 
 const Admin = () => {
