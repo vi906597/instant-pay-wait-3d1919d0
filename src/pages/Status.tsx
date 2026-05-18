@@ -20,6 +20,7 @@ type Payment = {
   status: string;
   utr: string | null;
   submitted_utr: string | null;
+  assigned_upi: string | null;
   created_at: string;
   updated_at: string;
 };
