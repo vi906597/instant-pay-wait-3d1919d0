@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
       let query = supabase
         .from("payments")
         .select(
-          "id,order_id,email,customer_mobile,amount,status,utr,submitted_utr,submitted_at,created_at,updated_at",
+          "id,order_id,email,customer_mobile,amount,status,utr,submitted_utr,submitted_at,assigned_upi,created_at,updated_at",
         )
         .order("created_at", { ascending: false })
         .limit(500);
