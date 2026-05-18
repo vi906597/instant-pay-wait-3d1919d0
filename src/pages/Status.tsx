@@ -162,15 +162,18 @@ const StatusPage = () => {
               <div className="inline-block p-4 bg-white rounded-2xl shadow-elevated">
                 <img src={qrImage} alt="UPI QR" className="w-64 h-64 object-contain" />
               </div>
-              {settings?.qr_mode === "auto" && (
-                <div className="mt-3 text-sm">
-                  <p className="text-muted-foreground">Pay to UPI ID</p>
-                  <button onClick={() => copy(settings.upi_id)}
-                    className="inline-flex items-center gap-2 font-mono font-semibold text-primary hover:underline">
-                    {settings.upi_id} <Copy className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
+              {settings?.qr_mode === "auto" && (() => {
+                const upiId = payment.assigned_upi || settings.upi_id;
+                return (
+                  <div className="mt-3 text-sm">
+                    <p className="text-muted-foreground">Pay to UPI ID</p>
+                    <button onClick={() => copy(upiId)}
+                      className="inline-flex items-center gap-2 font-mono font-semibold text-primary hover:underline">
+                      {upiId} <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                );
+              })()}
               <p className="text-xs text-muted-foreground mt-3">
                 Open any UPI app (GPay / PhonePe / Paytm) → Scan this QR → Pay exactly ₹{Number(payment.amount).toLocaleString("en-IN")}
               </p>
