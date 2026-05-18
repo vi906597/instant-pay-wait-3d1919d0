@@ -201,13 +201,12 @@ const StatusPage = () => {
             </div>
           )}
 
-          <div className="text-left bg-muted/50 rounded-xl p-4 space-y-3 mb-6">
-            <Row label="Order ID" value={payment.order_id} onCopy={() => copy(payment.order_id)} />
-            <Row label="Email" value={payment.email} />
-            {payment.submitted_utr && <Row label="Your UTR" value={payment.submitted_utr} />}
-            {payment.utr && <Row label="Verified UTR" value={payment.utr} onCopy={() => copy(payment.utr!)} />}
-            <Row label="Updated" value={new Date(payment.updated_at).toLocaleString("en-IN")} />
-          </div>
+          {(payment.submitted_utr || payment.utr) && (
+            <div className="text-left bg-muted/50 rounded-xl p-4 space-y-3 mb-6">
+              {payment.submitted_utr && <Row label="Your UTR" value={payment.submitted_utr} />}
+              {payment.utr && <Row label="Verified UTR" value={payment.utr} onCopy={() => copy(payment.utr!)} />}
+            </div>
+          )}
 
           <Button onClick={() => fetchAll(true)} disabled={refreshing} variant="outline" className="w-full h-12">
             {refreshing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
