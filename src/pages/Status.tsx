@@ -61,7 +61,8 @@ const StatusPage = () => {
             .from("qr_codes").select("image_url").eq("amount", amt).maybeSingle();
           setQrImage(qr?.image_url || null);
         } else {
-          const upi = `upi://pay?pa=${encodeURIComponent((setRows as Settings).upi_id)}&pn=${encodeURIComponent((setRows as Settings).payee_name)}&am=${amt}&cu=INR&tn=${encodeURIComponent((pay as Payment).order_id)}`;
+          const upiId = (pay as Payment).assigned_upi || (setRows as Settings).upi_id;
+          const upi = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent((setRows as Settings).payee_name)}&am=${amt}&cu=INR&tn=${encodeURIComponent((pay as Payment).order_id)}`;
           const dataUrl = await QRCode.toDataURL(upi, { width: 320, margin: 1 });
           setQrImage(dataUrl);
         }
