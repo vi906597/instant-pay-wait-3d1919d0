@@ -36,12 +36,22 @@ const Index = () => {
     setLoading(true);
     try {
       const order_id = `ORD${Date.now()}${Math.floor(Math.random() * 1000)}`;
+
+      // Pick a UPI from the admin pool (rotates each new order)
+      const { data: settings } = await supabase
+        .from("payment_settings").select("upi_ids,upi_id").limit(1).maybeSingle();
+      const pool: string[] = (settings?.upi_ids && settings.upi_ids.length > 0)
+        ? settings.upi_ids
+        : (settings?.upi_id ? [settings.upi_id] : []);
+      const assigned_upi = pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : null;
+
       const { error } = await supabase.from("payments").insert({
         order_id,
         email,
         customer_mobile: mobile,
         amount: finalAmount,
         status: "PENDING",
+        assigned_upi,
       });
       if (error) {
         toast({ title: "Failed to create order", description: error.message, variant: "destructive" });
