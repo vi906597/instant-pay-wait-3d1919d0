@@ -100,11 +100,12 @@ Deno.serve(async (req) => {
 
       // Update settings
       if (action === "update-settings") {
-        const { upi_id, payee_name, qr_mode } = body;
+        const { upi_id, payee_name, qr_mode, upi_ids } = body;
         const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
         if (upi_id) update.upi_id = upi_id;
         if (payee_name) update.payee_name = payee_name;
         if (qr_mode) update.qr_mode = qr_mode;
+        if (Array.isArray(upi_ids)) update.upi_ids = upi_ids;
         const { data: existing } = await supabase
           .from("payment_settings")
           .select("id")
