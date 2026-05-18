@@ -161,7 +161,7 @@ const PaymentsTab = ({ call }: { call: (p: string, i?: RequestInit) => Promise<a
   }, [filter, search, call]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
-  useEffect(() => { const i = setInterval(fetchData, 30000); return () => clearInterval(i); }, [fetchData]);
+  useEffect(() => { const i = setInterval(fetchData, 10000); return () => clearInterval(i); }, [fetchData]);
 
   const setStatus = async (order_id: string, status: string, utr?: string) => {
     try {
